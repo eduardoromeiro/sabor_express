@@ -26,7 +26,8 @@
 
 from os import system
 
-lista = []
+lista = [{"nome": "Restaurante 1", "categoria": "Mexicana", "status": False},
+         {"nome": "Restaurante 2", "categoria": "Japonesa", "status": False}]
 
 
 def exibir_titulo():
@@ -56,7 +57,7 @@ def escolha_opcao():
         elif escolha == 2:
             listar()
         elif escolha == 3:
-            print('\n--------> Ativar <--------')
+            alterar_status()
         else:
             encerrar()
     except ValueError:
@@ -73,23 +74,56 @@ def voltar_menu():
     main()
 
 
+def exibir_subtitulo(texto):
+    system("clear")
+    linha = "-" * (len(texto) + 2)
+    print(f'\n{texto}')
+    print(linha + "\n")
+
+
 def cadastrar():
-    print('\n--------> Cadastrar <--------\n')
+    exibir_subtitulo("Cadastrar Restaurante")
     nome = input("\nDigite o nome do Restaurante: ")
-    lista.append(nome)
+    categoria = input("\nDigite a categoria do Restaurante: ")
+    dados = {"nome": nome, "categoria": categoria, "status": False}
+    lista.append(dados)
     print("\nCadastro realizado com sucesso!")
     voltar_menu()
 
 
 def listar():
-    system("clear")
-    print('\n--------> Lista de Restaurantes <--------\n')
+    exibir_subtitulo("Lista de Restaurantes")
     total = 0
-    for indice, restaurante in enumerate(lista):
-        print(f'{indice} - {restaurante}')
+    print(f'{"Nome".ljust(20)} | {"Categoria".ljust(20)} | {"Status"}')
+    print("-" * 60)
+    for restaurante in lista:
+        nome_restaurante = restaurante["nome"]
+        categoria = restaurante["categoria"]
+        status = restaurante["status"]
+        ativo = "☒" if status else "☐"
+
+        print(f'\n{nome_restaurante.ljust(20)} | {categoria.ljust(20)} | {ativo}')
+
         total += 1
 
     print(f"\nTotal de restaurante: {total}")
+    voltar_menu()
+
+
+def alterar_status():
+    exibir_subtitulo("Alterar Status")
+    nome_restaurante = input("\nDigite o nome do Restaurante: ")
+    restaurante_encontrado = False
+
+    for restaurante in lista:
+        if nome_restaurante == restaurante["nome"]:
+            restaurante_encontrado = True
+            restaurante["status"] = not restaurante["status"]
+            mensagem = f"\nO restaurante {nome_restaurante} foi ativado com sucesso" if restaurante[
+                "status"] else f"O resturante {nome_restaurante} foi desativado com sucesso"
+            print(mensagem)
+    if not restaurante_encontrado:
+        print("\nO resturante não foi encontrado")
     voltar_menu()
 
 
